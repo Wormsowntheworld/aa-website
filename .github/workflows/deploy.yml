@@ -1,0 +1,50 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # 1) Put pnpm on PATH before setup-node's cache logic runs
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          # match your repo's packageManager field
+          version: 10.4.1
+          run_install: false
+
+      # 2) Now setup-node can safely use cache: pnpm
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Check pnpm
+        run: pnpm -v
+
+      # temporary while you just changed date-fns: lockfile can update in CI
+      - name: Install deps
+        run: pnpm install --no-frozen-lockfile
+
+      - name: Build (Vite → dist/)
+        run: pnpm build
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+          # cname: asiansartisan.com
