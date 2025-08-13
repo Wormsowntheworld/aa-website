@@ -38,7 +38,7 @@ const ProductsSection = () => {
       icon: ChefHat,
       title: 'Hotel-Grade Ready-to-Cook Bases',
       description: 'Professional kitchen solutions for consistency and efficiency.',
-      image: productsImage,
+      image: productImage,
       features: ['Chef Approved', 'Time Saving', 'Consistent Results', 'Scalable Portions']
     }
   ];
