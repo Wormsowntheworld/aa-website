@@ -21,7 +21,7 @@ const H = 1080;
 //    (These numbers are *the* knobs that make pins match the coastline).
 //    Start with these for East/SE Asia and tweak until SG is perfect.
 const BOUNDS = {
-  lonMin: 155,   // left edge longitude
+  lonMin: 10,   // left edge longitude
   lonMax: 60,  // right edge longitude
   latMin: 10,  // bottom edge latitude
   latMax: 80,   // top edge latitude (only used for clamping)
