@@ -5,7 +5,7 @@ on:
     branches: [main]
 
 permissions:
-  contents: read
+  contents: write   # <-- needed for gh-pages push
   pages: write
   id-token: write
 
@@ -17,13 +17,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # Put pnpm on PATH first. Do NOT pass 'version' since it's already in package.json ("packageManager")
+      # Put pnpm on PATH (reads version from package.json "packageManager")
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
           run_install: false
 
-      # Now setup-node can safely enable pnpm cache
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -33,12 +32,11 @@ jobs:
       - name: Verify pnpm
         run: pnpm -v
 
-      # While you just changed dependencies, allow lockfile update once.
-      # After first green build, switch to: pnpm install --frozen-lockfile
+      # while stabilizing deps/lockfile:
       - name: Install dependencies
         run: pnpm install --no-frozen-lockfile
 
-      - name: Build (Vite -> dist/)
+      - name: Build (Vite → dist/)
         run: pnpm build
 
       - name: Deploy to GitHub Pages
@@ -46,4 +44,5 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
-          # cname: asiansartisan.com
+          publish_branch: gh-pages   # explicit
+          # cname: asiansartisan.com  # uncomment if you want the action to write CNAME
