@@ -2,27 +2,42 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [main]
+    branches: [ main ]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: 20
-          # no cache line → no lockfile needed
+          cache: pnpm
 
+      - name: Enable corepack (pnpm)
+        run: corepack enable
+
+      # Use --no-frozen-lockfile so CI can refresh the lock after you changed date-fns
+      # (Once you're happy, commit the new pnpm-lock.yaml and switch to --frozen-lockfile)
       - name: Install dependencies
-        run: npm install
+        run: pnpm install --no-frozen-lockfile
 
-      - name: Build
-        run: npm run build
+      - name: Build (Vite -> dist/)
+        run: pnpm build
 
-      - name: Deploy
+      - name: Deploy to GitHub Pages (gh-pages branch)
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
+          # uncomment if you want the action to write CNAME for you:
+          # cname: asiansartisan.com
