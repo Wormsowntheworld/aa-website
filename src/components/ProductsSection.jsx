@@ -4,6 +4,7 @@ import { useInView } from 'framer-motion';
 import { useRef } from 'react';
 import { Package, Droplets, Leaf, ChefHat, Star } from 'lucide-react';
 import productsImage from '../assets/YoBLS75zz1dZ.jpg';
+import productImage from '../assets/1C8VEtX6cHd9.jpg';
 import sichuanSpices from '../assets/XO1rEddHDwin.jpg';
 import appleBrand from '../assets/l8xlXjf6vSyS.png';
 
